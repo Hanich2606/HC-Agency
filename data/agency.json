@@ -1,0 +1,31 @@
+{
+  "brandName": "HC Agency",
+  "tagline": "Premium web design studio helping local businesses grow with high-performance websites that attract customers and build trust.",
+  "location": "Tunis, Tunisia",
+  "contact": {
+    "email": "hello@hcagency.co",
+    "phone": "+216 50 375 715",
+    "whatsapp": "+216 50 375 715",
+    "consultationUrl": "contact.html"
+  },
+  "socials": {
+    "instagram": "https://instagram.com/hcagency",
+    "linkedin": "https://linkedin.com/company/hcagency",
+    "behance": "https://behance.net/hcagency",
+    "github": "https://github.com/hcagency"
+  },
+  "coreValues": [
+    "Business-First Mindset: We prioritize conversions, page load speed, and client trust over trendy design gimmicks.",
+    "Uncompromising Quality: Apple-level attention to detail across typography, alignment, contrast, and mobile responsiveness.",
+    "Clean, Performant Code: No heavy page builders or bloated dependencies. Fast websites score higher on Google and convert more visitors.",
+    "Personalized Partnership: Direct access and clear communication from start to launch."
+  ],
+  "process": [
+    "1. Discovery: Understanding your business and goals.",
+    "2. Strategy: Planning the architecture and content.",
+    "3. Design: Creating your premium visual identity.",
+    "4. Development: Building with clean, performant code.",
+    "5. Launch: Going live with confidence.",
+    "6. Support: Ongoing care and optimization."
+  ]
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "web-design",
+    "name": "Website Design",
+    "description": "Custom interfaces that build instant trust, communicate professionalism, and guide visitors toward taking action.",
+    "features": [
+      "Custom design tailored to your brand and industry",
+      "Mobile-first responsive layouts",
+      "Conversion-focused user experience",
+      "Premium visual identity and typography"
+    ],
+    "url": "services.html#web-design"
+  },
+  {
+    "id": "web-development",
+    "name": "Website Development",
+    "description": "Clean, efficient code that ensures your website loads fast, works on every device, and scales as your business grows.",
+    "features": [
+      "Hand-coded, fast-loading websites",
+      "Cross-browser and cross-device compatibility",
+      "Accessible and semantic HTML",
+      "Secure, scalable architecture"
+    ],
+    "url": "services.html#web-development"
+  },
+  {
+    "id": "local-seo",
+    "name": "Local SEO",
+    "description": "Optimize your website and online presence to make sure local customers searching for your services find you first.",
+    "features": [
+      "Google Business Profile optimization",
+      "On-page SEO and structured data",
+      "Local keyword targeting",
+      "Technical SEO foundation"
+    ],
+    "url": "services.html#local-seo"
+  },
+  {
+    "id": "maintenance",
+    "name": "Website Maintenance",
+    "description": "Ongoing support, security updates, backups, and content changes so your site stays fast, secure, and up-to-date.",
+    "features": [
+      "Regular security monitoring",
+      "Content updates and changes",
+      "Performance monitoring",
+      "Priority technical support"
+    ],
+    "url": "services.html#maintenance"
+  },
+  {
+    "id": "ai-automations",
+    "name": "AI Automations",
+    "description": "Intelligent automation including custom AI chatbots for customer support, appointment scheduling, and workflow optimization.",
+    "features": [
+      "AI-powered chatbots for customer support",
+      "Automated appointment scheduling",
+      "Email and follow-up automation",
+      "Workflow optimization"
+    ],
+    "url": "services.html#ai-automations"
+  },
+  {
+    "id": "performance",
+    "name": "Performance Optimization",
+    "description": "Optimizing Core Web Vitals, images, assets, and code to guarantee instant load times and prevent loss of conversions.",
+    "features": [
+      "Core Web Vitals optimization",
+      "Image and asset optimization",
+      "Code minification and caching",
+      "Server and hosting recommendations"
+    ],
+    "url": "services.html#performance"
+  }
+]

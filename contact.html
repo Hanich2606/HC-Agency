@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — HC Agency | Book a Free Consultation</title>
+  <meta name="description" content="Get in touch with HC Agency to discuss your website project. Book a free consultation and receive a custom quote for your local business.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact Us — HC Agency">
+  <meta property="og:description" content="Book a free consultation and receive a custom quote for your local business.">
+  <meta property="og:url" content="https://hcagency.co/contact">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact Us — HC Agency">
+
+  <link rel="icon" href="degrade.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/assistant.css">
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- HEADER -->
+  <header class="header" id="header" role="banner">
+    <div class="container header__inner">
+      <a href="index.html" class="header__logo" aria-label="HC Agency - Home">
+        <img src="logo/Logo blanc.png" alt="HC Agency" class="header__logo-img header__logo-img--default">
+        <img src="logo/Logo bleu dégradé.png" alt="HC Agency" class="header__logo-img header__logo-img--hover">
+      </a>
+      <nav class="header__nav" aria-label="Main navigation">
+        <ul class="header__nav-list" role="list">
+          <li><a href="index.html" class="header__nav-link">Home</a></li>
+          <li><a href="services.html" class="header__nav-link">Services</a></li>
+          <li><a href="portfolio.html" class="header__nav-link">Portfolio</a></li>
+          <li><a href="pricing.html" class="header__nav-link">Pricing</a></li>
+          <li><a href="about.html" class="header__nav-link">About</a></li>
+          <li><a href="contact.html" class="header__nav-link header__nav-link--active">Contact</a></li>
+          <li><a href="blog.html" class="header__nav-link">Blog</a></li>
+        </ul>
+      </nav>
+      <a href="contact.html" class="btn btn--primary btn--small header__cta">Book a Consultation</a>
+      <button class="header__hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobile-nav" role="dialog" aria-label="Mobile navigation">
+    <nav>
+      <ul class="mobile-nav__list" role="list">
+        <li class="mobile-nav__item"><a href="index.html" class="mobile-nav__link">Home</a></li>
+        <li class="mobile-nav__item"><a href="services.html" class="mobile-nav__link">Services</a></li>
+        <li class="mobile-nav__item"><a href="portfolio.html" class="mobile-nav__link">Portfolio</a></li>
+        <li class="mobile-nav__item"><a href="pricing.html" class="mobile-nav__link">Pricing</a></li>
+        <li class="mobile-nav__item"><a href="about.html" class="mobile-nav__link">About</a></li>
+        <li class="mobile-nav__item"><a href="contact.html" class="mobile-nav__link">Contact</a></li>
+        <li class="mobile-nav__item"><a href="blog.html" class="mobile-nav__link">Blog</a></li>
+      </ul>
+      <div class="mobile-nav__cta">
+        <a href="contact.html" class="btn btn--primary btn--large btn--full">Book a Consultation</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- MAIN -->
+  <main id="main-content">
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="page-hero__bg"></div>
+      <div class="container">
+        <div class="page-hero__content reveal">
+          <span class="section__label">Get In Touch</span>
+          <h1 class="page-hero__title">Let's Build a Website That Works as Hard as You Do.</h1>
+          <p class="page-hero__subtitle">Schedule a free strategy call or send us a message. We'll analyze your current site and outline a clear growth roadmap.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form & Info Grid -->
+    <section class="section" aria-label="Contact information and form">
+      <div class="container">
+        <div class="contact__grid reveal">
+          
+          <!-- Contact Form -->
+          <div class="contact-form-container">
+            <h2 class="section__title" style="font-size: var(--text-2xl); margin-bottom: var(--space-md);">Book a Free Consultation</h2>
+
+            <!-- Formspree success message -->
+            <div data-fs-success class="form-success-message" style="display:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              <h3>Thank you!</h3>
+              <p>Your consultation request has been submitted. We'll be in touch within 24 hours.</p>
+            </div>
+
+            <!-- Formspree form-level error -->
+            <div data-fs-error class="form-error-message" style="display:none;"></div>
+
+            <form id="contact-form" class="contact-form" novalidate>
+              
+              <div class="form-group">
+                <label for="name" class="form-group__label">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-group__input" placeholder="e.g. Sarah Jenkins" required data-fs-field>
+                <span class="form-group__error">Please enter your name</span>
+                <span data-fs-error="name" class="form-group__error form-group__error--server"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="email" class="form-group__label">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-group__input" placeholder="e.g. sarah@yourbusiness.com" required data-fs-field>
+                <span class="form-group__error">Please enter a valid email address</span>
+                <span data-fs-error="email" class="form-group__error form-group__error--server"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="phone" class="form-group__label">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-group__input" placeholder="e.g. +216 XX XXX XXX" data-fs-field>
+              </div>
+
+              <div class="form-group">
+                <label for="industry" class="form-group__label">Business Industry</label>
+                <select id="industry" name="industry" class="form-group__select" data-fs-field>
+                  <option value="">Select your industry...</option>
+                  <option value="restaurant">Restaurant / Café</option>
+                  <option value="dental">Dental / Medical Clinic</option>
+                  <option value="gym">Gym / Fitness Studio</option>
+                  <option value="law">Law Firm / Professional Services</option>
+                  <option value="hotel">Hotel / Hospitality</option>
+                  <option value="beauty">Beauty / Salon</option>
+                  <option value="realestate">Real Estate</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message" class="form-group__label">Project Details *</label>
+                <textarea id="message" name="message" class="form-group__textarea" placeholder="Tell us about your business goals and what you hope to achieve with a new website..." required data-fs-field></textarea>
+                <span class="form-group__error">Please enter project details</span>
+                <span data-fs-error="message" class="form-group__error form-group__error--server"></span>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--large btn--full" data-fs-submit-btn>
+                Submit Consultation Request
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+
+            </form>
+          </div>
+
+          <!-- Contact Details -->
+          <div class="contact-info">
+            <h2 class="section__title" style="font-size: var(--text-2xl); margin-bottom: var(--space-md);">Direct Channels</h2>
+            
+            <div class="contact-info__item">
+              <div class="contact-info__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </div>
+              <div>
+                <span class="contact-info__label">Email</span>
+                <div class="contact-info__value"><a href="mailto:hello@hcagency.co" data-contact="email">hello@hcagency.co</a></div>
+              </div>
+            </div>
+
+            <div class="contact-info__item">
+              <div class="contact-info__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              </div>
+              <div>
+                <span class="contact-info__label">Phone</span>
+                <div class="contact-info__value"><a href="tel:+216XXXXXXXX" data-contact="phone">+216 XX XXX XXX</a></div>
+              </div>
+            </div>
+
+            <div class="contact-info__item">
+              <div class="contact-info__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              </div>
+              <div>
+                <span class="contact-info__label">WhatsApp</span>
+                <div class="contact-info__value"><a href="https://wa.me/21600000000" data-contact="whatsapp" target="_blank" rel="noopener noreferrer">+216 XX XXX XXX</a></div>
+              </div>
+            </div>
+
+            <div class="contact-info__item">
+              <div class="contact-info__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              </div>
+              <div>
+                <span class="contact-info__label">Location</span>
+                <div class="contact-info__value"><span data-contact="location">Tunis, Tunisia</span></div>
+              </div>
+            </div>
+
+            <div style="margin-top: var(--space-md);">
+              <span class="contact-info__label">Social Media</span>
+              <div class="social-links">
+                <a href="https://instagram.com/hcagency" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="https://linkedin.com/company/hcagency" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+                <a href="https://behance.net/hcagency" class="social-link" aria-label="Behance" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h5.025c-.154-1.545-1.085-2.328-2.476-2.328-1.459 0-2.354.87-2.549 2.328zm-8.9 5.545c-3.667 0-5.14-2.024-5.14-4.638 0-2.218 1.263-3.636 2.88-4.16v-.046c-1.162-.474-2.2-1.592-2.2-3.28 0-2.487 1.876-4.421 4.862-4.421h6.338v16.545h-6.74zm.452-7.364c-1.606 0-2.592.924-2.592 2.378 0 1.563 1.1 2.426 2.674 2.426h3.343v-4.804h-3.425zm-.138-6.621c-1.37 0-2.242.82-2.242 2.124 0 1.39.906 2.175 2.328 2.175h3.195v-4.299h-3.281z"/></svg></a>
+                <a href="https://github.com/hcagency" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo" aria-label="HC Agency - Home">
+            <img src="logo/Logo blanc.png" alt="HC Agency" class="footer__logo-img">
+          </a>
+          <p class="footer__tagline">Premium web design studio helping local businesses grow with high-performance websites that attract customers and build trust.</p>
+          <div class="social-links" style="margin-top: var(--space-md);">
+            <a href="https://instagram.com/hcagency" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+            <a href="https://linkedin.com/company/hcagency" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+            <a href="https://behance.net/hcagency" class="social-link" aria-label="Behance" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h5.025c-.154-1.545-1.085-2.328-2.476-2.328-1.459 0-2.354.87-2.549 2.328zm-8.9 5.545c-3.667 0-5.14-2.024-5.14-4.638 0-2.218 1.263-3.636 2.88-4.16v-.046c-1.162-.474-2.2-1.592-2.2-3.28 0-2.487 1.876-4.421 4.862-4.421h6.338v16.545h-6.74zm.452-7.364c-1.606 0-2.592.924-2.592 2.378 0 1.563 1.1 2.426 2.674 2.426h3.343v-4.804h-3.425zm-.138-6.621c-1.37 0-2.242.82-2.242 2.124 0 1.39.906 2.175 2.328 2.175h3.195v-4.299h-3.281z"/></svg></a>
+            <a href="https://github.com/hcagency" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="footer__heading">Navigation</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="index.html" class="footer__link">Home</a></li>
+            <li><a href="services.html" class="footer__link">Services</a></li>
+            <li><a href="portfolio.html" class="footer__link">Portfolio</a></li>
+            <li><a href="pricing.html" class="footer__link">Pricing</a></li>
+            <li><a href="about.html" class="footer__link">About</a></li>
+            <li><a href="blog.html" class="footer__link">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__heading">Services</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="services.html#web-design" class="footer__link">Website Design</a></li>
+            <li><a href="services.html#web-development" class="footer__link">Website Development</a></li>
+            <li><a href="services.html#local-seo" class="footer__link">Local SEO</a></li>
+            <li><a href="services.html#maintenance" class="footer__link">Maintenance</a></li>
+            <li><a href="services.html#ai-automations" class="footer__link">AI Automations</a></li>
+            <li><a href="services.html#performance" class="footer__link">Performance</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__heading">Contact</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="mailto:hello@hcagency.co" class="footer__link">hello@hcagency.co</a></li>
+            <li><a href="tel:+216XXXXXXXX" class="footer__link">+216 XX XXX XXX</a></li>
+            <li><span class="footer__link">Tunis, Tunisia</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">&copy; 2026 HC Agency. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="sticky-cta">
+    <a href="contact.html" class="btn btn--primary btn--full">Book a Free Consultation</a>
+  </div>
+
+  <!-- Formspree Ajax SDK -->
+  <script>
+    window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+    formspree('initForm', { formElement: '#contact-form', formId: 'xeajgpqn' });
+  </script>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/assistant.js" defer></script>
+</body>
+</html>

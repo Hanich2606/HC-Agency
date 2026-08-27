@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insights &amp; Resources — HC Agency | Web Growth Articles</title>
+  <meta name="description" content="Actionable web design, local SEO, and digital growth strategy articles for local business owners.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Insights &amp; Resources — HC Agency">
+  <meta property="og:description" content="Actionable web design, local SEO, and digital growth strategy articles for local business owners.">
+  <meta property="og:url" content="https://hcagency.co/blog">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Insights &amp; Resources — HC Agency">
+
+  <link rel="icon" href="degrade.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/assistant.css">
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- HEADER -->
+  <header class="header" id="header" role="banner">
+    <div class="container header__inner">
+      <a href="index.html" class="header__logo" aria-label="HC Agency - Home">
+        <img src="logo/Logo blanc.png" alt="HC Agency" class="header__logo-img header__logo-img--default">
+        <img src="logo/Logo bleu dégradé.png" alt="HC Agency" class="header__logo-img header__logo-img--hover">
+      </a>
+      <nav class="header__nav" aria-label="Main navigation">
+        <div class="header__nav-pill">
+          <ul class="header__nav-list" role="list">
+            <li><a href="index.html" class="header__nav-link">Home</a></li>
+            <li><a href="services.html" class="header__nav-link">Services</a></li>
+            <li><a href="portfolio.html" class="header__nav-link">Portfolio</a></li>
+            <li><a href="pricing.html" class="header__nav-link">Pricing</a></li>
+            <li><a href="about.html" class="header__nav-link">About</a></li>
+            <li><a href="contact.html" class="header__nav-link">Contact</a></li>
+            <li><a href="blog.html" class="header__nav-link header__nav-link--active">Blog</a></li>
+          </ul>
+        </div>
+      </nav>
+      <a href="contact.html" class="header__cta">Book a Consultation</a>
+      <button class="header__hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobile-nav" role="dialog" aria-label="Mobile navigation">
+    <nav>
+      <ul class="mobile-nav__list" role="list">
+        <li class="mobile-nav__item"><a href="index.html" class="mobile-nav__link"><span class="mobile-nav__link-number">01</span>Home</a></li>
+        <li class="mobile-nav__item"><a href="services.html" class="mobile-nav__link"><span class="mobile-nav__link-number">02</span>Services</a></li>
+        <li class="mobile-nav__item"><a href="portfolio.html" class="mobile-nav__link"><span class="mobile-nav__link-number">03</span>Portfolio</a></li>
+        <li class="mobile-nav__item"><a href="pricing.html" class="mobile-nav__link"><span class="mobile-nav__link-number">04</span>Pricing</a></li>
+        <li class="mobile-nav__item"><a href="about.html" class="mobile-nav__link"><span class="mobile-nav__link-number">05</span>About</a></li>
+        <li class="mobile-nav__item"><a href="contact.html" class="mobile-nav__link"><span class="mobile-nav__link-number">06</span>Contact</a></li>
+        <li class="mobile-nav__item"><a href="blog.html" class="mobile-nav__link"><span class="mobile-nav__link-number">07</span>Blog</a></li>
+      </ul>
+      <div class="mobile-nav__separator"></div>
+      <div class="mobile-nav__cta">
+        <a href="contact.html" class="btn btn--primary btn--large">Book a Consultation</a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- MAIN -->
+  <main id="main-content">
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="page-hero__bg"></div>
+      <div class="container">
+        <div class="page-hero__content reveal">
+          <span class="section__label">Insights &amp; Guides</span>
+          <h1 class="page-hero__title">Resources to Help Your Local Business Grow</h1>
+          <p class="page-hero__subtitle">Articles on web design strategy, local SEO optimization, and digital conversion best practices auto-authored by HC AI.</p>
+          <div style="margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <button id="generate-ai-blog-btn" class="btn btn--secondary" style="gap: 0.5rem; display: inline-flex; align-items: center; border-radius: 999px; padding: 0.6rem 1.25rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              <span>Generate New AI Article</span>
+            </button>
+            <span id="blog-gen-status" style="font-size: var(--text-sm); color: var(--color-text-muted);"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="section" aria-label="Articles grid">
+      <div class="container">
+        
+        <!-- Articles Grid -->
+        <div class="blog__grid" id="blog-grid">
+          
+          <article class="blog-card" data-id="post-1">
+            <div class="blog-card__image-wrap">
+              <img src="service-photo/1.avif" alt="Why Every Local Business Needs More Than Just a Social Media Page" class="blog-card__img" loading="lazy">
+              <span class="blog-card__category-badge">Strategy</span>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <div class="blog-card__author">
+                  <img src="degrade.png" alt="HC AI" class="blog-card__avatar">
+                  <span class="blog-card__author-name">HC AI</span>
+                </div>
+                <span class="blog-card__date">Aug 20, 2026</span>
+              </div>
+
+              <h2 class="blog-card__title">Why Every Local Business Needs More Than Just a Social Media Page</h2>
+              <p class="blog-card__excerpt">Discover why relying solely on social platforms limits your search visibility and customer trust, and how a dedicated website changes the game.</p>
+
+              <div class="blog-card__footer">
+                <span class="blog-card__read-time">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  5 min read
+                </span>
+                <button class="blog-card__read-btn" aria-label="Read full article">
+                  Read Article
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <article class="blog-card" data-id="post-2">
+            <div class="blog-card__image-wrap">
+              <img src="service-photo/2.jpg" alt="5 Signs Your Website Is Losing You Paying Customers" class="blog-card__img" loading="lazy">
+              <span class="blog-card__category-badge">Conversion</span>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <div class="blog-card__author">
+                  <img src="degrade.png" alt="HC AI" class="blog-card__avatar">
+                  <span class="blog-card__author-name">HC AI</span>
+                </div>
+                <span class="blog-card__date">Aug 19, 2026</span>
+              </div>
+
+              <h2 class="blog-card__title">5 Signs Your Website Is Losing You Paying Customers</h2>
+              <p class="blog-card__excerpt">Slow load times, hidden call-to-action buttons, and poor mobile formatting cause visitors to bounce directly to your competitors. Here is how to fix them.</p>
+
+              <div class="blog-card__footer">
+                <span class="blog-card__read-time">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  6 min read
+                </span>
+                <button class="blog-card__read-btn" aria-label="Read full article">
+                  Read Article
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section section--alt" aria-label="Call to action">
+      <div class="cta-section__bg"></div>
+      <div class="container">
+        <div class="cta-section__content reveal">
+          <h2 class="cta-section__title">Want Custom Strategy Advice for Your Business?</h2>
+          <p class="cta-section__text">Skip the reading and get a personalized site review directly from our studio team.</p>
+          <a href="contact.html" class="btn btn--primary btn--large">
+            Book a Free Consultation
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ARTICLE MODAL READER -->
+  <div class="article-modal" id="article-modal" role="dialog" aria-modal="true" aria-label="Article Reader">
+    <div class="article-modal__container">
+      <button class="article-modal__close" id="modal-close-btn" aria-label="Close article">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="article-modal__body" id="modal-body">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo" aria-label="HC Agency - Home">
+            <img src="logo/Logo blanc.png" alt="HC Agency" class="footer__logo-img">
+          </a>
+          <p class="footer__tagline">Premium web design studio helping local businesses grow with high-performance websites that attract customers and build trust.</p>
+        </div>
+        <div>
+          <h3 class="footer__heading">Navigation</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="index.html" class="footer__link">Home</a></li>
+            <li><a href="services.html" class="footer__link">Services</a></li>
+            <li><a href="portfolio.html" class="footer__link">Portfolio</a></li>
+            <li><a href="pricing.html" class="footer__link">Pricing</a></li>
+            <li><a href="about.html" class="footer__link">About</a></li>
+            <li><a href="blog.html" class="footer__link">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__heading">Services</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="services.html#web-design" class="footer__link">Website Design</a></li>
+            <li><a href="services.html#web-development" class="footer__link">Website Development</a></li>
+            <li><a href="services.html#local-seo" class="footer__link">Local SEO</a></li>
+            <li><a href="services.html#maintenance" class="footer__link">Maintenance</a></li>
+            <li><a href="services.html#ai-automations" class="footer__link">AI Automations</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__heading">Contact</h3>
+          <ul class="footer__links" role="list">
+            <li><a href="mailto:hello@hcagency.co" class="footer__link" data-contact="email">hello@hcagency.co</a></li>
+            <li><a href="tel:+216XXXXXXXX" class="footer__link" data-contact="phone">+216 XX XXX XXX</a></li>
+            <li><span class="footer__link" data-contact="location">Tunis, Tunisia</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">&copy; 2026 HC Agency. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/blog.js"></script>
+</body>
+</html>

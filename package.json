@@ -1,0 +1,13 @@
+{
+  "name": "hc-agency-website",
+  "version": "1.0.0",
+  "description": "HC Agency — Premium Web Design Studio & AI Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "generate-blog": "node scripts/generate-blog.js"
+  },
+  "keywords": [],
+  "author": "HC Agency",
+  "license": "ISC"
+}

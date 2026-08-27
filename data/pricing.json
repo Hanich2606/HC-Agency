@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Essential",
+    "target": "Small businesses needing a clean, modern, and highly professional online presence.",
+    "price": "Custom Quote",
+    "features": [
+      "Custom Design (Up to 5 Pages)",
+      "Mobile-First Responsive Layout",
+      "Basic On-Page SEO Setup",
+      "Fast Load Speed Optimization",
+      "Contact Form & Location Map"
+    ],
+    "actionUrl": "contact.html"
+  },
+  {
+    "name": "Professional",
+    "badge": "Most Popular ⭐",
+    "target": "Growing businesses ready to dominate local search and turn traffic into clients.",
+    "price": "Custom Quote",
+    "features": [
+      "Custom Design (Up to 10 Pages)",
+      "Advanced Local SEO & Schema",
+      "Google Business Profile Optimization",
+      "Conversion Funnel & Lead Booking",
+      "Core Web Vitals Guarantee (<2s load)"
+    ],
+    "actionUrl": "contact.html"
+  },
+  {
+    "name": "Premium",
+    "target": "Complete digital solution for businesses seeking maximum market presence and custom automation.",
+    "price": "Custom Quote",
+    "features": [
+      "Bespoke Multi-Page Experience",
+      "AI Automations & Chatbot Integration",
+      "Full Local SEO Strategy & Copywriting",
+      "Priority Ongoing Maintenance & Care",
+      "Dedicated Business Strategy Support"
+    ],
+    "actionUrl": "contact.html"
+  }
+]
