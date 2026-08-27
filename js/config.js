@@ -17,7 +17,7 @@ const SITE_CONFIG = {
 
   // Contact Coordinates (Edit here to update everywhere on all pages!)
   contact: {
-    email: "hello@hcagency.co",
+    email: "hello@hcagency.tn",
     phone: "+216 50 375 506",
     phoneRaw: "+21650375506",
     whatsapp: "+216 50 375 715",

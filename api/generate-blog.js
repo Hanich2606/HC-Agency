@@ -207,21 +207,26 @@ Return ONLY valid JSON matching this exact structure:
       content: generatedPost.content
     };
 
-    // Save to data/blog.json
-    try {
-      let currentPosts = [];
-      if (fs.existsSync(blogJsonPath)) {
-        const fileData = fs.readFileSync(blogJsonPath, 'utf8');
-        currentPosts = JSON.parse(fileData);
+    // Save to data/blog.json (local dev only — Vercel has read-only filesystem)
+    const isVercel = !!process.env.VERCEL;
+    if (!isVercel) {
+      try {
+        let currentPosts = [];
+        if (fs.existsSync(blogJsonPath)) {
+          const fileData = fs.readFileSync(blogJsonPath, 'utf8');
+          currentPosts = JSON.parse(fileData);
+        }
+        currentPosts.unshift(finalPost);
+        fs.writeFileSync(blogJsonPath, JSON.stringify(currentPosts, null, 2), 'utf8');
+        console.log(`[HC AI] Article generated & saved to data/blog.json: "${finalPost.title}"`);
+      } catch (saveErr) {
+        console.error('[HC AI] Error saving to data/blog.json:', saveErr);
       }
-      currentPosts.unshift(finalPost);
-      fs.writeFileSync(blogJsonPath, JSON.stringify(currentPosts, null, 2), 'utf8');
-      console.log(`[HC AI] Article generated & saved to data/blog.json: "${finalPost.title}"`);
-    } catch (saveErr) {
-      console.error('[HC AI] Error saving to data/blog.json:', saveErr);
+    } else {
+      console.log(`[HC AI] Running on Vercel (read-only FS) — article generated but not saved to disk: "${finalPost.title}"`);
     }
 
-    return res.status(200).json({ success: true, post: finalPost });
+    return res.status(200).json({ success: true, post: finalPost, savedToDisk: !isVercel });
 
   } catch (err) {
     console.error('Blog Generation Error:', err);
