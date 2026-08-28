@@ -37,6 +37,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/blog", "destination": "/api/blog" },
     { "source": "/api/chat", "destination": "/api/chat" },
     { "source": "/api/generate-blog", "destination": "/api/generate-blog" }
   ]

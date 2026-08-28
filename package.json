@@ -9,5 +9,8 @@
   },
   "keywords": [],
   "author": "HC Agency",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
+  }
 }

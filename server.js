@@ -28,6 +28,7 @@ if (fs.existsSync(envPath)) {
 
 // Import serverless handlers from api/
 const chatHandler = require('./api/chat.js');
+const blogHandler = require('./api/blog.js');
 const generateBlogHandler = require('./api/generate-blog.js');
 
 const PORT = 3000;
@@ -57,6 +58,12 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(data));
   };
+
+  // Handle /api/blog GET requests
+  if (pathname === '/api/blog') {
+    blogHandler(req, res);
+    return;
+  }
 
   // Handle /api/chat POST requests
   if (pathname === '/api/chat') {

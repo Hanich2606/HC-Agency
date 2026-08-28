@@ -207,26 +207,73 @@ Return ONLY valid JSON matching this exact structure:
       content: generatedPost.content
     };
 
-    // Save to data/blog.json (local dev only — Vercel has read-only filesystem)
-    const isVercel = !!process.env.VERCEL;
-    if (!isVercel) {
+    // Retrieve current posts from Vercel Blob (if configured) or local data/blog.json
+    let currentPosts = [];
+    let savedStorage = 'none';
+
+    // 1. Try Vercel Blob storage first if configured
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
-        let currentPosts = [];
-        if (fs.existsSync(blogJsonPath)) {
-          const fileData = fs.readFileSync(blogJsonPath, 'utf8');
-          currentPosts = JSON.parse(fileData);
+        const { list, put } = require('@vercel/blob');
+        
+        // Fetch existing posts from Blob
+        try {
+          const { blobs } = await list({ prefix: 'blog.json' });
+          if (blobs && blobs.length > 0) {
+            const blobRes = await fetch(blobs[0].url);
+            if (blobRes.ok) currentPosts = await blobRes.json();
+          }
+        } catch (readBlobErr) {
+          console.warn('[HC AI] Could not read existing blob, starting fresh or fallback:', readBlobErr.message);
         }
+
+        // Fallback to local posts if Blob is empty initially
+        if (!currentPosts || currentPosts.length === 0) {
+          const fallbackPath = path.join(process.cwd(), 'data', 'blog.json');
+          if (fs.existsSync(fallbackPath)) {
+            currentPosts = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
+          }
+        }
+
         currentPosts.unshift(finalPost);
-        fs.writeFileSync(blogJsonPath, JSON.stringify(currentPosts, null, 2), 'utf8');
-        console.log(`[HC AI] Article generated & saved to data/blog.json: "${finalPost.title}"`);
-      } catch (saveErr) {
-        console.error('[HC AI] Error saving to data/blog.json:', saveErr);
+
+        // Upload updated blog.json to Vercel Blob
+        const blobResult = await put('blog.json', JSON.stringify(currentPosts, null, 2), {
+          access: 'public',
+          addRandomSuffix: false,
+          contentType: 'application/json'
+        });
+
+        savedStorage = 'vercel-blob';
+        console.log(`[HC AI] Article saved to Vercel Blob (${blobResult.url}): "${finalPost.title}"`);
+
+      } catch (blobErr) {
+        console.error('[HC AI] Error saving to Vercel Blob:', blobErr);
       }
-    } else {
-      console.log(`[HC AI] Running on Vercel (read-only FS) — article generated but not saved to disk: "${finalPost.title}"`);
     }
 
-    return res.status(200).json({ success: true, post: finalPost, savedToDisk: !isVercel });
+    // 2. Local filesystem storage (when running on localhost)
+    if (!process.env.VERCEL) {
+      try {
+        const localPath = path.join(process.cwd(), 'data', 'blog.json');
+        if (currentPosts.length === 0 && fs.existsSync(localPath)) {
+          currentPosts = JSON.parse(fs.readFileSync(localPath, 'utf8'));
+          currentPosts.unshift(finalPost);
+        }
+        fs.writeFileSync(localPath, JSON.stringify(currentPosts.length > 0 ? currentPosts : [finalPost], null, 2), 'utf8');
+        savedStorage = 'local-fs';
+        console.log(`[HC AI] Article saved locally to data/blog.json: "${finalPost.title}"`);
+      } catch (fsErr) {
+        console.error('[HC AI] Error writing to data/blog.json:', fsErr);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      post: finalPost,
+      storage: savedStorage,
+      totalPosts: currentPosts.length
+    });
 
   } catch (err) {
     console.error('Blog Generation Error:', err);

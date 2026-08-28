@@ -29,47 +29,67 @@
   // 2. MOBILE NAVIGATION
   // ==========================================================================
 
-  const hamburger = document.getElementById('hamburger');
-  const mobileNav = document.getElementById('mobile-nav');
+  function getHamburger() {
+    return document.getElementById('hamburger') || document.querySelector('.header__hamburger');
+  }
 
-  if (hamburger && mobileNav) {
-    hamburger.addEventListener('click', function () {
-      const isOpen = mobileNav.classList.contains('mobile-nav--open');
-
-      if (isOpen) {
-        closeMobileNav();
-      } else {
-        openMobileNav();
-      }
-    });
-
-    // Close on link click
-    const mobileLinks = mobileNav.querySelectorAll('.mobile-nav__link');
-    mobileLinks.forEach(function (link) {
-      link.addEventListener('click', closeMobileNav);
-    });
-
-    // Close on escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && mobileNav.classList.contains('mobile-nav--open')) {
-        closeMobileNav();
-      }
-    });
+  function getMobileNav() {
+    return document.getElementById('mobile-nav') || document.querySelector('.mobile-nav');
   }
 
   function openMobileNav() {
-    mobileNav.classList.add('mobile-nav--open');
-    hamburger.classList.add('header__hamburger--active');
-    hamburger.setAttribute('aria-expanded', 'true');
+    const mobileNav = getMobileNav();
+    const hamburger = getHamburger();
+    if (mobileNav) mobileNav.classList.add('mobile-nav--open');
+    if (hamburger) {
+      hamburger.classList.add('header__hamburger--active');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
     document.body.classList.add('nav-open');
   }
 
   function closeMobileNav() {
-    mobileNav.classList.remove('mobile-nav--open');
-    hamburger.classList.remove('header__hamburger--active');
-    hamburger.setAttribute('aria-expanded', 'false');
+    const mobileNav = getMobileNav();
+    const hamburger = getHamburger();
+    if (mobileNav) mobileNav.classList.remove('mobile-nav--open');
+    if (hamburger) {
+      hamburger.classList.remove('header__hamburger--active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
     document.body.classList.remove('nav-open');
   }
+
+  // Delegated click handler: works seamlessly even when components.js rewrites the header/nav HTML
+  document.addEventListener('click', function (e) {
+    const hamburgerBtn = e.target.closest('#hamburger, .header__hamburger');
+    if (hamburgerBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const mobileNav = getMobileNav();
+      if (mobileNav && mobileNav.classList.contains('mobile-nav--open')) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+      return;
+    }
+
+    // Close when clicking any link inside mobile navigation
+    const mobileLink = e.target.closest('.mobile-nav a');
+    if (mobileLink) {
+      closeMobileNav();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      const mobileNav = getMobileNav();
+      if (mobileNav && mobileNav.classList.contains('mobile-nav--open')) {
+        closeMobileNav();
+      }
+    }
+  });
 
 
   // ==========================================================================

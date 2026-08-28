@@ -52,9 +52,8 @@
     // 2. RENDER UNIFIED MOBILE NAV OVERLAY
     const mobileNavEl = document.getElementById('mobile-nav') || document.querySelector('.mobile-nav');
     if (mobileNavEl) {
-      const mobileNavItemsHtml = (config.navigation || []).map((item, index) => {
-        const num = String(index + 1).padStart(2, '0');
-        return `<li class="mobile-nav__item"><a href="${item.url}" class="mobile-nav__link"><span class="mobile-nav__link-number">${num}</span>${item.name}</a></li>`;
+      const mobileNavItemsHtml = (config.navigation || []).map(item => {
+        return `<li class="mobile-nav__item"><a href="${item.url}" class="mobile-nav__link">${item.name}</a></li>`;
       }).join('');
 
       mobileNavEl.innerHTML = `
@@ -64,7 +63,7 @@
           </ul>
           <div class="mobile-nav__separator"></div>
           <div class="mobile-nav__cta">
-            <a href="${config.contact?.consultationUrl || 'contact.html'}" class="btn btn--primary btn--large">Book a Consultation</a>
+            <a href="${config.contact?.consultationUrl || 'contact.html'}" class="btn btn--primary btn--large">Book a Free Consultation</a>
           </div>
         </nav>
       `;

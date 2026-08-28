@@ -14,12 +14,18 @@
   const modalCloseBtn = document.getElementById('modal-close-btn');
   const modalContent = document.getElementById('modal-body');
 
-  const genAiBtn = document.getElementById('generate-ai-blog-btn');
-  const genStatus = document.getElementById('blog-gen-status');
-
   async function initBlog() {
     try {
-      const res = await fetch(`data/blog.json?t=${Date.now()}`);
+      // Fetch articles from API (which reads from Vercel Blob or fallback)
+      let res;
+      try {
+        res = await fetch(`/api/blog?t=${Date.now()}`);
+        if (!res.ok) throw new Error('API route returned status ' + res.status);
+      } catch (apiErr) {
+        // Fallback to static JSON file if API route is not running
+        res = await fetch(`data/blog.json?t=${Date.now()}`);
+      }
+      
       allPosts = await res.json();
       renderBlogGrid();
       setupEventListeners();
@@ -162,35 +168,6 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeArticleModal();
     });
-
-    if (genAiBtn) {
-      genAiBtn.addEventListener('click', async () => {
-        try {
-          genAiBtn.disabled = true;
-          if (genStatus) genStatus.textContent = '🤖 HC AI is generating article...';
-          
-          const res = await fetch('/api/generate-blog', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-          });
-
-          if (res.ok) {
-            const data = await res.json();
-            if (genStatus) genStatus.textContent = '✅ New article created!';
-            setTimeout(() => { if (genStatus) genStatus.textContent = ''; }, 4000);
-            await initBlog();
-          } else {
-            if (genStatus) genStatus.textContent = '❌ Could not generate article';
-          }
-        } catch (e) {
-          console.error('Blog generation trigger error:', e);
-          if (genStatus) genStatus.textContent = '⚠️ Generation endpoint unavailable';
-        } finally {
-          genAiBtn.disabled = false;
-        }
-      });
-    }
   }
 
   if (document.readyState === 'loading') {
