@@ -91,9 +91,31 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // Prevent duplicate articles on the same day
+    const formattedToday = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const blogJsonPath = path.join(__dirname, '../data/blog.json');
+    if (fs.existsSync(blogJsonPath)) {
+      try {
+        const existingPosts = JSON.parse(fs.readFileSync(blogJsonPath, 'utf8'));
+        if (existingPosts.length > 0 && existingPosts[0].date === formattedToday) {
+          console.log(`[HC AI] Article already exists for ${formattedToday}, skipping generation.`);
+          return res.status(200).json({
+            success: true,
+            skipped: true,
+            message: `Article already generated for ${formattedToday}`,
+            post: existingPosts[0]
+          });
+        }
+      } catch (e) {
+        console.warn('[HC AI] Could not check existing posts:', e.message);
+      }
+    }
+
     const apiKey = process.env.OPENAI_API_KEY || process.env.AI_API_KEY || process.env.GEMINI_API_KEY;
     const body = req.body || {};
-    const requestedTopic = body.topic || null;
+    // Support topic from body (POST) or query string (GET/cron)
+    const parsedUrl = new URL(req.url || '/', `http://${req.headers?.host || 'localhost'}`);
+    const requestedTopic = body.topic || parsedUrl.searchParams.get('topic') || null;
 
     let generatedPost = null;
 
@@ -136,24 +158,42 @@ Return ONLY valid JSON matching this exact structure:
             if (rawJson) generatedPost = JSON.parse(rawJson);
           }
         } else {
-          // Gemini API
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-          const apiResponse = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              systemInstruction: { parts: [{ text: systemPrompt }] },
-              contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-              generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
-            })
-          });
+          // Gemini API — try multiple models with fallback
+          const geminiModels = ['gemini-2.5-flash', 'gemini-1.5-flash-latest'];
+          let geminiSuccess = false;
 
-          if (apiResponse.ok) {
-            const data = await apiResponse.json();
-            const rawText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
-            if (rawText) generatedPost = JSON.parse(rawText);
-          } else {
-            console.log('[HC AI] Remote Gemini API call returned status:', apiResponse.status);
+          for (const modelName of geminiModels) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+            try {
+              const apiResponse = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  systemInstruction: { parts: [{ text: systemPrompt }] },
+                  contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+                  generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+                })
+              });
+
+              if (apiResponse.ok) {
+                const data = await apiResponse.json();
+                const rawText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
+                if (rawText) {
+                  generatedPost = JSON.parse(rawText);
+                  console.log(`[HC AI] Blog generated successfully with ${modelName}`);
+                  geminiSuccess = true;
+                  break;
+                }
+              } else {
+                console.warn(`[HC AI] Gemini ${modelName} returned status ${apiResponse.status}`);
+              }
+            } catch (modelErr) {
+              console.warn(`[HC AI] Gemini ${modelName} fetch error:`, modelErr.message);
+            }
+          }
+
+          if (!geminiSuccess) {
+            console.log('[HC AI] All Gemini models failed, using fallback templates.');
           }
         }
       } catch (remoteErr) {
@@ -189,8 +229,7 @@ Return ONLY valid JSON matching this exact structure:
       };
     }
 
-    const blogJsonPath = path.join(__dirname, '../data/blog.json');
-    const formattedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    // blogJsonPath and formattedToday already declared above
 
     const finalPost = {
       id: `post-${Date.now()}`,
@@ -198,7 +237,7 @@ Return ONLY valid JSON matching this exact structure:
       slug: generatedPost.slug || `post-${Date.now()}`,
       category: generatedPost.category || "Strategy",
       readTime: generatedPost.readTime || "5 min read",
-      date: formattedDate,
+      date: formattedToday,
       author: "HC AI",
       coverImage: generatedPost.coverImage || "service-photo/3.jpg",
       inlineImages: generatedPost.inlineImages || ["service-photo/4.png"],

@@ -1,5 +1,25 @@
 [
   {
+    "id": "post-1788307798475",
+    "title": "Why Site Speed is the #1 Secret to Ranking First on Google Local",
+    "slug": "hc-ai-post-1788307798475",
+    "category": "Local SEO",
+    "readTime": "4 min read",
+    "date": "Sep 2, 2026",
+    "author": "HC AI",
+    "coverImage": "service-photo/2.jpg",
+    "inlineImages": [
+      "service-photo/4.png"
+    ],
+    "summary": "Uncover how PageSpeed scores directly influence your Google Maps ranking and why custom-coded websites outrank heavy template builders.",
+    "keyTakeaways": [
+      "Google's Core Web Vitals directly impact search rankings on mobile.",
+      "Custom clean code loads 3x faster than WordPress plugin-heavy sites.",
+      "Higher speed leads to lower bounce rates and higher conversion rates."
+    ],
+    "content": "\n      <p>When potential clients search for local services in your area, Google prioritizes websites that deliver an exceptional, lightning-fast user experience.</p>\n      <h2>1. Core Web Vitals and Search Visibility</h2>\n      <p>Since Google's page experience update, loading speed is no longer optional—it is a primary ranking factor. Sites that load under 1.5 seconds earn top placement on both Google Search and Google Maps local packs.</p>\n      <h2>2. The Hidden Cost of Heavy Plugins</h2>\n      <p>Many traditional website builders rely on dozens of third-party plugins that bloat code size and slow down rendering. Custom HTML5 and optimized CSS eliminate unnecessary overhead, delivering immediate response times on mobile devices.</p>\n      <blockquote class=\"blog-quote\">\"Every half-second delay in page load time costs local businesses up to 10% of their organic conversion rate.\"<cite>— HC AI Performance Audit</cite></blockquote>\n      <h2>3. Maximize Your Search Ranking Today</h2>\n      <p>Is your website loading slowly? Contact HC Agency for a complimentary performance audit and discover how our custom web design elevates your local visibility.</p>\n    "
+  },
+  {
     "id": "post-1787576665827",
     "title": "Strategic Insights: 10 Proven Web Design Trends for 2026",
     "slug": "hc-ai-post-1787576665812",
