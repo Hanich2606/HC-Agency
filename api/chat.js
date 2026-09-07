@@ -27,7 +27,7 @@ NAVIGATION LINKS & MEDIA (CRITICAL INSTRUCTION):
   • Pricing: [View Full Pricing & Packages](pricing.html)
   • Services: [Explore Our Services](services.html)
   • Portfolio: [View Our Portfolio](portfolio.html)
-  • Case Studies: [August Case Study](august.html), [Lumière Case Study](lumiere.html), [Nõva Case Study](nova.html)
+  • Case Studies: [August Case Study](portfolio/august.html), [Lumière Case Study](portfolio/lumiere.html), [Nõva Case Study](portfolio/nova.html)
   • Consultation: [Book a Free Consultation](contact.html)
   • About: [About HC Agency](about.html)
 - When showcasing case studies or services, include image previews using Markdown syntax ![Alt text](image_path):

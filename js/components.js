@@ -12,22 +12,38 @@
   function initComponents() {
     const config = window.SITE_CONFIG || {};
 
+    // Detect if current page is inside a subfolder (e.g. portfolio/)
+    const isInSubdir = window.location.pathname.includes('/portfolio/') || 
+                       (typeof document !== 'undefined' && (
+                         !!document.querySelector('script[src*="../js/"]') ||
+                         !!document.querySelector('link[href*="../css/"]')
+                       ));
+    const basePath = isInSubdir ? '../' : '';
+
+    const resolveUrl = (url) => {
+      if (!url || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('mailto:') || url.startsWith('tel:')) {
+        return url;
+      }
+      return basePath + url;
+    };
+
     // Get current filename for active state highlighting
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const isPortfolioSection = currentPath === 'portfolio.html' || currentPath === 'august.html' || currentPath === 'lumiere.html' || currentPath === 'nova.html' || isInSubdir;
 
     // 1. RENDER UNIFIED HEADER
     const headerEl = document.getElementById('header') || document.querySelector('.header');
     if (headerEl) {
       const navItemsHtml = (config.navigation || []).map(item => {
-        const isActive = item.url === currentPath;
-        return `<li><a href="${item.url}" class="header__nav-link ${isActive ? 'header__nav-link--active' : ''}">${item.name}</a></li>`;
+        const isActive = item.url === currentPath || (item.url === 'portfolio.html' && isPortfolioSection);
+        return `<li><a href="${resolveUrl(item.url)}" class="header__nav-link ${isActive ? 'header__nav-link--active' : ''}">${item.name}</a></li>`;
       }).join('');
 
       headerEl.innerHTML = `
         <div class="container header__inner">
-          <a href="index.html" class="header__logo" aria-label="${config.brandName || 'HC Agency'} - Home">
-            <img src="logo/Logo blanc.png" alt="${config.brandName || 'HC Agency'}" class="header__logo-img header__logo-img--default">
-            <img src="logo/Logo bleu dégradé.png" alt="${config.brandName || 'HC Agency'}" class="header__logo-img header__logo-img--hover">
+          <a href="${resolveUrl('index.html')}" class="header__logo" aria-label="${config.brandName || 'HC Agency'} - Home">
+            <img src="${resolveUrl('logo/Logo blanc.png')}" alt="${config.brandName || 'HC Agency'}" class="header__logo-img header__logo-img--default">
+            <img src="${resolveUrl('logo/Logo bleu dégradé.png')}" alt="${config.brandName || 'HC Agency'}" class="header__logo-img header__logo-img--hover">
           </a>
 
           <nav class="header__nav" aria-label="Main navigation">
@@ -38,7 +54,7 @@
             </div>
           </nav>
 
-          <a href="${config.contact?.consultationUrl || 'contact.html'}" class="header__cta">Book a Consultation</a>
+          <a href="${resolveUrl(config.contact?.consultationUrl || 'contact.html')}" class="header__cta">Book a Consultation</a>
 
           <button class="header__hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
             <span></span>
@@ -53,7 +69,7 @@
     const mobileNavEl = document.getElementById('mobile-nav') || document.querySelector('.mobile-nav');
     if (mobileNavEl) {
       const mobileNavItemsHtml = (config.navigation || []).map(item => {
-        return `<li class="mobile-nav__item"><a href="${item.url}" class="mobile-nav__link">${item.name}</a></li>`;
+        return `<li class="mobile-nav__item"><a href="${resolveUrl(item.url)}" class="mobile-nav__link">${item.name}</a></li>`;
       }).join('');
 
       mobileNavEl.innerHTML = `
@@ -63,7 +79,7 @@
           </ul>
           <div class="mobile-nav__separator"></div>
           <div class="mobile-nav__cta">
-            <a href="${config.contact?.consultationUrl || 'contact.html'}" class="btn btn--primary btn--large">Book a Free Consultation</a>
+            <a href="${resolveUrl(config.contact?.consultationUrl || 'contact.html')}" class="btn btn--primary btn--large">Book a Free Consultation</a>
           </div>
         </nav>
       `;
@@ -73,23 +89,23 @@
     const footerEl = document.querySelector('.footer');
     if (footerEl) {
       const footerNavHtml = (config.navigation || []).map(item => {
-        return `<li><a href="${item.url}" class="footer__link">${item.name}</a></li>`;
+        return `<li><a href="${resolveUrl(item.url)}" class="footer__link">${item.name}</a></li>`;
       }).join('');
 
       const footerServicesHtml = (config.services || []).map(item => {
-        return `<li><a href="${item.url}" class="footer__link">${item.name}</a></li>`;
+        return `<li><a href="${resolveUrl(item.url)}" class="footer__link">${item.name}</a></li>`;
       }).join('');
 
       const footerLegalHtml = (config.legal || []).map(item => {
-        return `<a href="${item.url}">${item.name}</a>`;
+        return `<a href="${resolveUrl(item.url)}">${item.name}</a>`;
       }).join('');
 
       footerEl.innerHTML = `
         <div class="container">
           <div class="footer__grid">
             <div class="footer__brand">
-              <a href="index.html" class="footer__logo" aria-label="${config.brandName || 'HC Agency'} - Home">
-                <img src="logo/Logo blanc.png" alt="${config.brandName || 'HC Agency'}" class="footer__logo-img">
+              <a href="${resolveUrl('index.html')}" class="footer__logo" aria-label="${config.brandName || 'HC Agency'} - Home">
+                <img src="${resolveUrl('logo/Logo blanc.png')}" alt="${config.brandName || 'HC Agency'}" class="footer__logo-img">
               </a>
               <p class="footer__tagline">${config.tagline || ''}</p>
               <div class="social-links" style="margin-top: var(--space-md);">

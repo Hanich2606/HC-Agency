@@ -90,70 +90,22 @@
     <section class="section" aria-label="Articles grid">
       <div class="container">
         
-        <!-- Articles Grid -->
-        <div class="blog__grid" id="blog-grid">
-          
-          <article class="blog-card" data-id="post-1">
-            <div class="blog-card__image-wrap">
-              <img src="service-photo/1.avif" alt="Why Every Local Business Needs More Than Just a Social Media Page" class="blog-card__img" loading="lazy">
-              <span class="blog-card__category-badge">Strategy</span>
-            </div>
-            <div class="blog-card__body">
-              <div class="blog-card__meta">
-                <div class="blog-card__author">
-                  <img src="degrade.png" alt="HC AI" class="blog-card__avatar">
-                  <span class="blog-card__author-name">HC AI</span>
-                </div>
-                <span class="blog-card__date">Aug 20, 2026</span>
-              </div>
-
-              <h2 class="blog-card__title">Why Every Local Business Needs More Than Just a Social Media Page</h2>
-              <p class="blog-card__excerpt">Discover why relying solely on social platforms limits your search visibility and customer trust, and how a dedicated website changes the game.</p>
-
-              <div class="blog-card__footer">
-                <span class="blog-card__read-time">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                  5 min read
-                </span>
-                <button class="blog-card__read-btn" aria-label="Read full article">
-                  Read Article
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-              </div>
-            </div>
-          </article>
-
-          <article class="blog-card" data-id="post-2">
-            <div class="blog-card__image-wrap">
-              <img src="service-photo/2.jpg" alt="5 Signs Your Website Is Losing You Paying Customers" class="blog-card__img" loading="lazy">
-              <span class="blog-card__category-badge">Conversion</span>
-            </div>
-            <div class="blog-card__body">
-              <div class="blog-card__meta">
-                <div class="blog-card__author">
-                  <img src="degrade.png" alt="HC AI" class="blog-card__avatar">
-                  <span class="blog-card__author-name">HC AI</span>
-                </div>
-                <span class="blog-card__date">Aug 19, 2026</span>
-              </div>
-
-              <h2 class="blog-card__title">5 Signs Your Website Is Losing You Paying Customers</h2>
-              <p class="blog-card__excerpt">Slow load times, hidden call-to-action buttons, and poor mobile formatting cause visitors to bounce directly to your competitors. Here is how to fix them.</p>
-
-              <div class="blog-card__footer">
-                <span class="blog-card__read-time">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                  6 min read
-                </span>
-                <button class="blog-card__read-btn" aria-label="Read full article">
-                  Read Article
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-              </div>
-            </div>
-          </article>
-
+        <!-- Category Filter Bar -->
+        <div class="blog-categories" id="blog-categories" role="tablist" aria-label="Filter articles by category">
+          <button class="blog-cat-btn blog-cat-btn--active" data-category="all" role="tab" aria-selected="true">All Articles</button>
+          <button class="blog-cat-btn" data-category="Local SEO" role="tab" aria-selected="false">Local SEO</button>
+          <button class="blog-cat-btn" data-category="Conversion" role="tab" aria-selected="false">Conversion</button>
+          <button class="blog-cat-btn" data-category="AI & Automation" role="tab" aria-selected="false">AI &amp; Automation</button>
+          <button class="blog-cat-btn" data-category="Strategy" role="tab" aria-selected="false">Strategy</button>
         </div>
+
+        <!-- Articles Grid -->
+        <div class="blog__grid" id="blog-grid" aria-live="polite">
+          <!-- Dynamically rendered by js/blog.js -->
+        </div>
+
+      </div>
+    </section>
 
       </div>
     </section>
@@ -221,7 +173,7 @@
         <div>
           <h3 class="footer__heading">Contact</h3>
           <ul class="footer__links" role="list">
-            <li><a href="mailto:hello@hcagency.tn" class="footer__link" data-contact="email">hello@hcagency.tn</a></li>
+            <li><a href="mailto:contact@hcagency.tn" class="footer__link" data-contact="email">contact@hcagency.tn</a></li>
             <li><a href="tel:+216XXXXXXXX" class="footer__link" data-contact="phone">+216 XX XXX XXX</a></li>
             <li><span class="footer__link" data-contact="location">Tunis, Tunisia</span></li>
           </ul>

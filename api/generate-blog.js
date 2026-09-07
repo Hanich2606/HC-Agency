@@ -78,6 +78,52 @@ const TOPICS_POOL = [
       <h2>3. Modernize Your Web Experience</h2>
       <p>Elevate your local brand with a high-converting website engineered by HC Agency. Book your consultation today to get started.</p>
     `
+  },
+  {
+    title: "Local SEO Playbook: How to Dominate Google Maps in 2026",
+    category: "Local SEO",
+    readTime: "5 min read",
+    coverImage: "service-photo/3.jpg",
+    inlineImages: ["service-photo/5.png"],
+    summary: "Discover the proven local search signals, schema markup, and geo-targeted landing page strategies that put your business in the top 3 Google Maps pack.",
+    keyTakeaways: [
+      "Consistent NAP citation structure across directories builds search trust.",
+      "LocalBusiness JSON-LD schema markup gives search engines verified entity clarity.",
+      "Fast mobile landing pages convert map clicks into real calls and bookings."
+    ],
+    content: `
+      <p>When consumers search for local restaurants, cafés, clinics, or boutique services, more than 60% of clicks go directly to the top 3 listings on the Google Maps local pack.</p>
+      <h2>1. Precise Schema Entity Data</h2>
+      <p>Google doesn't just crawl text—it looks for structured data. Adding comprehensive LocalBusiness JSON-LD schema containing your coordinates, hours, and service categories provides immediate ranking signals.</p>
+      <h2>2. Fast Mobile Experience for Map Browsers</h2>
+      <p>Users clicking from Google Maps are on mobile devices and ready to visit or call immediately. If your landing page takes more than 2 seconds to load, they will tap back and choose your competitor.</p>
+      <blockquote class="blog-quote">"Dominating local search isn't luck—it's structured data, speed, and clear conversion pathways that make Google trust your business."<cite>— HC AI Local SEO Strategy</cite></blockquote>
+      <h2>3. Real Client Reviews & Visual Proof</h2>
+      <p>Displaying authentic customer testimonials, verified ratings, and real photography directly on your local landing pages increases inquiry conversion rates by over 35%.</p>
+    `
+  },
+  {
+    title: "The Power of Micro-Interactions in Modern Luxury Web Design",
+    category: "Strategy",
+    readTime: "4 min read",
+    coverImage: "service-photo/1.avif",
+    inlineImages: ["service-photo/4.png"],
+    summary: "How subtle hover states, smooth transitions, and tactile feedback elevate perceived brand value and command premium pricing.",
+    keyTakeaways: [
+      "Micro-animations guide the user's focus effortlessly to conversion points.",
+      "High perceived design quality allows businesses to command 20-40% higher pricing.",
+      "Performance-first animations never compromise page speed."
+    ],
+    content: `
+      <p>The difference between an ordinary template website and a bespoke digital experience lies in the details that users feel before they consciously notice them.</p>
+      <h2>1. Perceived Value & Pricing Power</h2>
+      <p>When prospective clients browse a website with buttery smooth 60fps animations, tailored typography, and refined tactile feedback, they subconsciously categorize your business as high-end.</p>
+      <h2>2. Intentional Feedback Loops</h2>
+      <p>Every interactive element should respond with intent—whether that's an illuminated button glow, an expanding navigation pill, or a seamless modal transition.</p>
+      <blockquote class="blog-quote">"Luxury is the absence of friction. Great web design communicates care, prestige, and mastery without saying a word."<cite>— HC AI Design Principle</cite></blockquote>
+      <h2>3. Elevate Your Brand Presence</h2>
+      <p>HC Agency crafts bespoke digital flagship websites that reflect the elegance and prestige of your real-world establishment.</p>
+    `
   }
 ];
 
@@ -159,7 +205,7 @@ Return ONLY valid JSON matching this exact structure:
           }
         } else {
           // Gemini API — try multiple models with fallback
-          const geminiModels = ['gemini-2.5-flash', 'gemini-1.5-flash-latest'];
+          const geminiModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
           let geminiSuccess = false;
 
           for (const modelName of geminiModels) {
@@ -204,16 +250,19 @@ Return ONLY valid JSON matching this exact structure:
     // Fallback if AI provider call fails or key is invalid
     if (!generatedPost) {
       const blogJsonPath = path.join(__dirname, '../data/blog.json');
-      let existingCount = 0;
+      let existingPosts = [];
       if (fs.existsSync(blogJsonPath)) {
         try {
-          const existing = JSON.parse(fs.readFileSync(blogJsonPath, 'utf8'));
-          existingCount = existing.length;
+          existingPosts = JSON.parse(fs.readFileSync(blogJsonPath, 'utf8'));
         } catch (e) {}
       }
 
-      // Pick topic from pool based on existing count
-      const template = TOPICS_POOL[existingCount % TOPICS_POOL.length];
+      // Filter out templates whose titles already exist to prevent duplicate articles
+      const existingTitles = new Set(existingPosts.map(p => (p.title || '').toLowerCase().trim()));
+      const availableTemplates = TOPICS_POOL.filter(t => !existingTitles.has(t.title.toLowerCase().trim()));
+      const template = availableTemplates.length > 0 
+        ? availableTemplates[0] 
+        : TOPICS_POOL[existingPosts.length % TOPICS_POOL.length];
       const timestamp = Date.now();
       
       generatedPost = {
