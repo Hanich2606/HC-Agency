@@ -13,6 +13,62 @@ const pricingData = require('../data/pricing.json');
 const portfolioData = require('../data/portfolio.json');
 const faqData = require('../data/faq.json');
 
+// ---------------------------------------------------------------------------
+// Rate Limiter — In-memory sliding window (per Vercel serverless instance)
+// ---------------------------------------------------------------------------
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 10;              // 10 requests per IP per minute
+const rateLimitMap = new Map();
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+
+  if (!entry) {
+    rateLimitMap.set(ip, { count: 1, windowStart: now });
+    return false;
+  }
+
+  if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    // Reset window
+    entry.count = 1;
+    entry.windowStart = now;
+    return false;
+  }
+
+  entry.count++;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
+// Periodically clean stale entries to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap) {
+    if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS * 2) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}, 5 * 60 * 1000);
+
+// ---------------------------------------------------------------------------
+// Input sanitization helpers
+// ---------------------------------------------------------------------------
+function sanitizeText(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    .trim();
+}
+
+// ---------------------------------------------------------------------------
+// Allowed CORS origin
+// ---------------------------------------------------------------------------
+const ALLOWED_ORIGIN = process.env.VERCEL
+  ? 'https://hcagency.tn'
+  : '*'; // Allow all origins in local dev only
+
 // System Instruction prompt built from verified website knowledge
 const SYSTEM_INSTRUCTION = `
 You are HC AI, the official AI consultant for HC Agency (a premium web design & development agency for restaurants, cafés, and local businesses).
@@ -73,10 +129,11 @@ When visitors inquire about a project, naturally ask relevant clarifying questio
 `.trim();
 
 module.exports = async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS Headers — restricted to own domain in production
+  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -86,11 +143,17 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Rate limiting
+  const clientIp = (req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || '0.0.0.0').split(',')[0].trim();
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment before trying again.' });
+  }
+
   try {
     const apiKey = process.env.OPENAI_API_KEY || process.env.AI_API_KEY || process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      console.error('Server Error: No AI_API_KEY or OPENAI_API_KEY environment variable provided.');
+      console.error('[HC Chat] Missing API key environment variable.');
       return res.status(500).json({
         error: "Sorry, I'm having trouble connecting right now. Please try again in a moment."
       });
@@ -103,8 +166,14 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid or empty messages format.' });
     }
 
-    // Limit to last 12 messages for efficiency
-    const recentMessages = messages.slice(-12).filter(m => m.content && typeof m.content === 'string');
+    // Limit to last 12 messages for efficiency, sanitize content
+    const recentMessages = messages
+      .slice(-12)
+      .filter(m => m.content && typeof m.content === 'string')
+      .map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: sanitizeText(m.content).substring(0, 500)
+      }));
 
     if (recentMessages.length === 0) {
       return res.status(400).json({ error: 'No valid text messages provided.' });
@@ -117,10 +186,7 @@ module.exports = async function handler(req, res) {
       // --- CALL OPENAI API ---
       const formattedMessages = [
         { role: 'system', content: SYSTEM_INSTRUCTION },
-        ...recentMessages.map(m => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
-          content: m.content.substring(0, 1000)
-        }))
+        ...recentMessages
       ];
 
       const apiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -138,8 +204,7 @@ module.exports = async function handler(req, res) {
       });
 
       if (!apiResponse.ok) {
-        const errText = await apiResponse.text();
-        console.error('OpenAI API Error:', apiResponse.status, errText);
+        console.error('[HC Chat] OpenAI API error:', apiResponse.status);
         return res.status(500).json({
           error: "Sorry, I'm having trouble connecting right now. Please try again in a moment."
         });
@@ -163,7 +228,7 @@ module.exports = async function handler(req, res) {
       // --- CALL GEMINI API (v1beta) ---
       const contents = recentMessages.map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.content.substring(0, 1000) }]
+        parts: [{ text: m.content }]
       }));
 
       const payload = {
@@ -181,7 +246,6 @@ module.exports = async function handler(req, res) {
       ];
 
       let apiResponse = null;
-      let lastErrText = '';
 
       for (const modelName of candidateModels) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
@@ -194,15 +258,14 @@ module.exports = async function handler(req, res) {
           if (apiResponse.ok) {
             break;
           }
-          lastErrText = await apiResponse.text();
-          console.warn(`Gemini model ${modelName} returned status ${apiResponse.status}: ${lastErrText}`);
+          console.warn(`[HC Chat] Gemini ${modelName}: status ${apiResponse.status}`);
         } catch (e) {
-          console.warn(`Fetch error for model ${modelName}:`, e.message);
+          console.warn(`[HC Chat] Gemini ${modelName}: fetch error`);
         }
       }
 
       if (!apiResponse || !apiResponse.ok) {
-        console.error('Gemini API Error across all models:', lastErrText);
+        console.error('[HC Chat] All Gemini models failed.');
         return res.status(500).json({
           error: "Sorry, I'm having trouble connecting right now. Please try again in a moment."
         });
@@ -224,7 +287,7 @@ module.exports = async function handler(req, res) {
     }
 
   } catch (err) {
-    console.error('API Endpoint Exception:', err);
+    console.error('[HC Chat] Endpoint exception.');
     return res.status(500).json({
       error: "Sorry, I'm having trouble connecting right now. Please try again in a moment."
     });

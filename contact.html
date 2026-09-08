@@ -104,23 +104,29 @@
 
             <form id="contact-form" class="contact-form" novalidate>
               
+              <!-- Honeypot spam trap — hidden from real users, bots will fill it -->
+              <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
+                <label for="_gotcha">Leave this empty</label>
+                <input type="text" id="_gotcha" name="_gotcha" tabindex="-1" autocomplete="off">
+              </div>
+
               <div class="form-group">
                 <label for="name" class="form-group__label">Full Name *</label>
-                <input type="text" id="name" name="name" class="form-group__input" placeholder="e.g. Sarah Jenkins" required data-fs-field>
+                <input type="text" id="name" name="name" class="form-group__input" placeholder="e.g. Sarah Jenkins" required maxlength="100" autocomplete="name" data-fs-field>
                 <span class="form-group__error">Please enter your name</span>
                 <span data-fs-error="name" class="form-group__error form-group__error--server"></span>
               </div>
 
               <div class="form-group">
                 <label for="email" class="form-group__label">Email Address *</label>
-                <input type="email" id="email" name="email" class="form-group__input" placeholder="e.g. sarah@yourbusiness.com" required data-fs-field>
+                <input type="email" id="email" name="email" class="form-group__input" placeholder="e.g. sarah@yourbusiness.com" required maxlength="254" autocomplete="email" data-fs-field>
                 <span class="form-group__error">Please enter a valid email address</span>
                 <span data-fs-error="email" class="form-group__error form-group__error--server"></span>
               </div>
 
               <div class="form-group">
                 <label for="phone" class="form-group__label">Phone Number</label>
-                <input type="tel" id="phone" name="phone" class="form-group__input" placeholder="e.g. +216 XX XXX XXX" data-fs-field>
+                <input type="tel" id="phone" name="phone" class="form-group__input" placeholder="e.g. +216 XX XXX XXX" maxlength="20" autocomplete="tel" data-fs-field>
               </div>
 
               <div class="form-group">
@@ -140,7 +146,7 @@
 
               <div class="form-group">
                 <label for="message" class="form-group__label">Project Details *</label>
-                <textarea id="message" name="message" class="form-group__textarea" placeholder="Tell us about your business goals and what you hope to achieve with a new website..." required data-fs-field></textarea>
+                <textarea id="message" name="message" class="form-group__textarea" placeholder="Tell us about your business goals and what you hope to achieve with a new website..." required maxlength="2000" data-fs-field></textarea>
                 <span class="form-group__error">Please enter project details</span>
                 <span data-fs-error="message" class="form-group__error form-group__error--server"></span>
               </div>

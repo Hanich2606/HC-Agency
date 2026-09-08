@@ -212,6 +212,12 @@
   // 6. CONTACT FORM VALIDATION (works alongside Formspree Ajax SDK)
   // ==========================================================================
 
+  // Sanitize a string by stripping HTML tags
+  function sanitizeFormValue(str) {
+    if (typeof str !== 'string') return '';
+    return str.replace(/<[^>]*>/g, '').trim();
+  }
+
   const contactForm = document.getElementById('contact-form');
 
   if (contactForm) {
@@ -219,14 +225,22 @@
       let isValid = true;
       const requiredFields = contactForm.querySelectorAll('[required]');
 
+      // Honeypot check: if the hidden _gotcha field is filled, silently block submission
+      var honeypot = contactForm.querySelector('[name="_gotcha"]');
+      if (honeypot && honeypot.value) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+
       // Reset errors
       contactForm.querySelectorAll('.form-group').forEach(function (group) {
         group.classList.remove('form-group--error');
       });
 
       requiredFields.forEach(function (field) {
-        const group = field.closest('.form-group');
-        const value = field.value.trim();
+        var group = field.closest('.form-group');
+        var value = sanitizeFormValue(field.value);
 
         if (!value) {
           isValid = false;
@@ -235,12 +249,28 @@
 
         // Email validation
         if (field.type === 'email' && value) {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(value)) {
             isValid = false;
             if (group) group.classList.add('form-group--error');
           }
         }
+      });
+
+      // Phone validation (optional field — validate only if filled)
+      var phoneField = contactForm.querySelector('[name="phone"]');
+      if (phoneField && phoneField.value.trim()) {
+        var phoneRegex = /^[+]?[\d\s\-().]{7,20}$/;
+        if (!phoneRegex.test(phoneField.value.trim())) {
+          isValid = false;
+          var phoneGroup = phoneField.closest('.form-group');
+          if (phoneGroup) phoneGroup.classList.add('form-group--error');
+        }
+      }
+
+      // Sanitize all text inputs before submission
+      contactForm.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(function (field) {
+        field.value = sanitizeFormValue(field.value);
       });
 
       // Only prevent submission if client-side validation fails.

@@ -11,6 +11,90 @@
 (function () {
   'use strict';
 
+  // ---------------------------------------------------------------------------
+  // XSS Protection: HTML escaping & content sanitizer
+  // ---------------------------------------------------------------------------
+
+  // Escape HTML entities in plain text fields (title, summary, author, etc.)
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // Sanitize HTML content using allowlist approach (for blog post content)
+  // Only permits safe tags; strips script, event handlers, and dangerous attributes
+  var ALLOWED_TAGS = new Set(['P', 'H2', 'H3', 'H4', 'STRONG', 'EM', 'A', 'BLOCKQUOTE', 'CITE', 'CODE', 'UL', 'OL', 'LI', 'IMG', 'BR', 'SPAN', 'B', 'I']);
+  var ALLOWED_ATTRS = { 'A': ['href', 'target', 'rel', 'class'], 'IMG': ['src', 'alt', 'class', 'loading'], 'BLOCKQUOTE': ['class'], 'SPAN': ['class'] };
+  var DANGEROUS_ATTR_PATTERN = /^on/i;
+
+  function sanitizeHtmlContent(html) {
+    if (typeof html !== 'string' || !html.trim()) return '';
+    try {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      sanitizeNode(doc.body);
+      return doc.body.innerHTML;
+    } catch (e) {
+      return escapeHtml(html);
+    }
+  }
+
+  function sanitizeNode(parent) {
+    var children = Array.from(parent.childNodes);
+    for (var i = 0; i < children.length; i++) {
+      var node = children[i];
+      if (node.nodeType === 3) continue; // Text node — safe
+      if (node.nodeType !== 1) { node.remove(); continue; } // Non-element — remove
+
+      var tagName = node.tagName;
+      if (!ALLOWED_TAGS.has(tagName)) {
+        // Replace disallowed element with its text content
+        var textNode = document.createTextNode(node.textContent || '');
+        parent.replaceChild(textNode, node);
+        continue;
+      }
+
+      // Remove dangerous attributes
+      var attrs = Array.from(node.attributes);
+      var allowedForTag = ALLOWED_ATTRS[tagName] || [];
+      for (var j = 0; j < attrs.length; j++) {
+        var attrName = attrs[j].name.toLowerCase();
+        if (DANGEROUS_ATTR_PATTERN.test(attrName) || (allowedForTag.indexOf(attrName) === -1 && attrName !== 'class')) {
+          node.removeAttribute(attrs[j].name);
+        }
+      }
+
+      // For <a> tags, ensure safe href and add rel="noopener noreferrer" to external links
+      if (tagName === 'A') {
+        var href = node.getAttribute('href') || '';
+        if (href.match(/^javascript:/i) || href.match(/^data:/i)) {
+          node.removeAttribute('href');
+        }
+        if (href.startsWith('http')) {
+          node.setAttribute('rel', 'noopener noreferrer');
+          node.setAttribute('target', '_blank');
+        }
+      }
+
+      // For <img> tags, validate src
+      if (tagName === 'IMG') {
+        var src = node.getAttribute('src') || '';
+        if (!src.match(/^https?:\/\//i) && !src.match(/^[a-zA-Z0-9_\-/]+\.[a-zA-Z]{2,5}$/i)) {
+          node.remove();
+          continue;
+        }
+      }
+
+      // Recurse into children
+      sanitizeNode(node);
+    }
+  }
+
   // Fallback posts for offline or file:// protocol preview
   const FALLBACK_POSTS = [
     {
@@ -187,27 +271,27 @@
     }
 
     blogGrid.innerHTML = filtered.map(post => `
-      <article class="blog-card" data-id="${post.id}" tabindex="0" role="button" aria-label="Read: ${post.title}">
+      <article class="blog-card" data-id="${escapeHtml(post.id)}" tabindex="0" role="button" aria-label="Read: ${escapeHtml(post.title)}">
         <div class="blog-card__image-wrap">
-          <img src="${post.coverImage}" alt="${post.title}" class="blog-card__img" loading="lazy">
-          <span class="blog-card__category-badge">${post.category}</span>
+          <img src="${escapeHtml(post.coverImage)}" alt="${escapeHtml(post.title)}" class="blog-card__img" loading="lazy">
+          <span class="blog-card__category-badge">${escapeHtml(post.category)}</span>
         </div>
         <div class="blog-card__body">
           <div class="blog-card__meta">
             <div class="blog-card__author">
-              <img src="degrade.png" alt="${post.author || 'HC AI'}" class="blog-card__avatar">
-              <span class="blog-card__author-name">${post.author || 'HC AI'}</span>
+              <img src="degrade.png" alt="${escapeHtml(post.author || 'HC AI')}" class="blog-card__avatar">
+              <span class="blog-card__author-name">${escapeHtml(post.author || 'HC AI')}</span>
             </div>
-            <span class="blog-card__date">${post.date}</span>
+            <span class="blog-card__date">${escapeHtml(post.date)}</span>
           </div>
 
-          <h2 class="blog-card__title">${post.title}</h2>
-          <p class="blog-card__excerpt">${post.summary}</p>
+          <h2 class="blog-card__title">${escapeHtml(post.title)}</h2>
+          <p class="blog-card__excerpt">${escapeHtml(post.summary)}</p>
 
           <div class="blog-card__footer">
             <span class="blog-card__read-time">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              ${post.readTime}
+              ${escapeHtml(post.readTime)}
             </span>
             <span class="blog-card__read-btn" aria-hidden="true">
               Read Article
@@ -268,39 +352,39 @@
           Key Takeaways
         </div>
         <ul class="modal-takeaways__list">
-          ${post.keyTakeaways.map(t => `<li>${t}</li>`).join('')}
+          ${post.keyTakeaways.map(t => `<li>${escapeHtml(t)}</li>`).join('')}
         </ul>
       </div>
     ` : '';
 
     const inlineImagesHtml = post.inlineImages && post.inlineImages.length > 0 ? `
       <div class="modal-inline-media" style="margin: 2rem 0; border-radius: var(--radius-lg); overflow: hidden;">
-        <img src="${post.inlineImages[0]}" alt="${post.title}" class="modal-inline-img" style="width: 100%; height: auto; display: block; border-radius: var(--radius-lg);">
+        <img src="${escapeHtml(post.inlineImages[0])}" alt="${escapeHtml(post.title)}" class="modal-inline-img" style="width: 100%; height: auto; display: block; border-radius: var(--radius-lg);">
       </div>
     ` : '';
 
     modalContent.innerHTML = `
       <div class="modal-hero">
-        <img src="${post.coverImage}" alt="${post.title}" class="modal-hero__img">
+        <img src="${escapeHtml(post.coverImage)}" alt="${escapeHtml(post.title)}" class="modal-hero__img">
         <div class="modal-hero__overlay"></div>
-        <span class="modal-hero__tag">${post.category}</span>
+        <span class="modal-hero__tag">${escapeHtml(post.category)}</span>
       </div>
 
       <div class="modal-header-info">
-        <h1 class="modal-title">${post.title}</h1>
+        <h1 class="modal-title">${escapeHtml(post.title)}</h1>
         
         <div class="modal-author-bar">
           <div class="modal-author-info">
             <img src="degrade.png" alt="HC AI" class="modal-author-avatar">
             <div>
-              <div class="modal-author-name">${post.author || 'HC AI'} <span class="modal-author-badge"><span class="blog-card__live-dot"></span> Official</span></div>
+              <div class="modal-author-name">${escapeHtml(post.author || 'HC AI')} <span class="modal-author-badge"><span class="blog-card__live-dot"></span>Official</span></div>
               <div class="modal-author-role">HC Agency Digital Strategist</div>
             </div>
           </div>
           <div class="modal-meta-details">
-            <span>Published: ${post.date}</span>
+            <span>Published: ${escapeHtml(post.date)}</span>
             <span>•</span>
-            <span>${post.readTime}</span>
+            <span>${escapeHtml(post.readTime)}</span>
           </div>
         </div>
       </div>
@@ -308,7 +392,7 @@
       ${takeawaysHtml}
 
       <div class="modal-body-text">
-        ${post.content}
+        ${sanitizeHtmlContent(post.content)}
         ${inlineImagesHtml}
       </div>
 

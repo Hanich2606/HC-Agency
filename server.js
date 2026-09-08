@@ -33,6 +33,9 @@ const generateBlogHandler = require('./api/generate-blog.js');
 
 const PORT = 3000;
 
+// Maximum request body size (1 MB) to prevent DoS via large payloads
+const MAX_BODY_SIZE = 1 * 1024 * 1024;
+
 const MIME_TYPES = {
   '.html': 'text/html',
   '.css': 'text/css',
@@ -42,12 +45,66 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
-  '.txt': 'text/plain'
+  '.txt': 'text/plain',
+  '.avif': 'image/avif',
+  '.webp': 'image/webp'
 };
 
-const server = http.createServer((req, res) => {
+// Blocked paths — prevent access to sensitive files via static file server
+const BLOCKED_PATHS = [
+  '/.env',
+  '/.env.example',
+  '/.env.local',
+  '/.gitignore',
+  '/.git',
+  '/package.json',
+  '/package-lock.json',
+  '/server.js',
+  '/node_modules',
+  '/scripts',
+  '/vercel.json'
+];
+
+function isBlockedPath(pathname) {
+  const lower = pathname.toLowerCase();
+  return BLOCKED_PATHS.some(blocked => lower === blocked || lower.startsWith(blocked + '/'));
+}
+
+// Security headers for local dev (mirrors Vercel config)
+function setSecurityHeaders(res) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+}
+
+// Helper: read request body with size limit
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    let size = 0;
+    req.on('data', chunk => {
+      size += chunk.length;
+      if (size > MAX_BODY_SIZE) {
+        req.destroy();
+        reject(new Error('Request body too large'));
+        return;
+      }
+      body += chunk;
+    });
+    req.on('end', () => resolve(body));
+    req.on('error', reject);
+  });
+}
+
+const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
+
+  // Apply security headers to all responses
+  setSecurityHeaders(res);
 
   // Emulate Vercel/Express response helper methods
   res.status = function (code) {
@@ -67,39 +124,51 @@ const server = http.createServer((req, res) => {
 
   // Handle /api/chat POST requests
   if (pathname === '/api/chat') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    try {
+      const body = await readBody(req);
       try {
         req.body = body ? JSON.parse(body) : {};
       } catch (e) {
         req.body = {};
       }
       chatHandler(req, res);
-    });
+    } catch (err) {
+      res.statusCode = 413;
+      res.end('Request body too large');
+    }
     return;
   }
 
   // Handle /api/generate-blog POST/GET requests
   if (pathname === '/api/generate-blog') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    try {
+      const body = await readBody(req);
       try {
         req.body = body ? JSON.parse(body) : {};
       } catch (e) {
         req.body = {};
       }
       generateBlogHandler(req, res);
-    });
+    } catch (err) {
+      res.statusCode = 413;
+      res.end('Request body too large');
+    }
+    return;
+  }
+
+  // Block access to sensitive files
+  if (isBlockedPath(pathname)) {
+    res.statusCode = 403;
+    res.end('Forbidden');
     return;
   }
 
   // Serve static files
   let filePath = path.join(__dirname, pathname === '/' ? 'index.html' : pathname);
 
-  // Security check: stay within workspace directory
-  if (!filePath.startsWith(__dirname)) {
+  // Security check: stay within workspace directory (prevent path traversal)
+  const resolvedPath = path.resolve(filePath);
+  if (!resolvedPath.startsWith(path.resolve(__dirname))) {
     res.statusCode = 403;
     res.end('Forbidden');
     return;
@@ -131,7 +200,7 @@ server.listen(PORT, () => {
 
   // Helper to trigger automated blog generation
   function runAutoBlogGen() {
-    const reqMock = { method: 'POST', body: {} };
+    const reqMock = { method: 'POST', body: {}, headers: { authorization: `Bearer ${process.env.CRON_SECRET || ''}` } };
     const resMock = {
       setHeader: () => {},
       status: () => ({ json: () => {}, end: () => {} })

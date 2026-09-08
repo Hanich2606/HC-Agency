@@ -1,13 +1,27 @@
 /**
  * HC Agency — Backend AI Blog Generator Endpoint
  * 
- * Invoked by CLI script, frontend, or server automation.
+ * SECURITY: This endpoint requires authentication via CRON_SECRET.
+ * Invoked by Vercel Cron, CLI script, or authorized requests only.
  * Uses Gemini/OpenAI API (or built-in HC AI engine fallback) to generate rich,
  * SEO-optimized blog posts, saving them directly into data/blog.json.
  */
 
 const fs = require('fs');
 const path = require('path');
+
+// ---------------------------------------------------------------------------
+// Rate Limiter — 1 request per 5 minutes (per serverless instance)
+// ---------------------------------------------------------------------------
+let lastGenerationTime = 0;
+const GENERATION_COOLDOWN_MS = 5 * 60 * 1000;
+
+// ---------------------------------------------------------------------------
+// Allowed CORS origin
+// ---------------------------------------------------------------------------
+const ALLOWED_ORIGIN = process.env.VERCEL
+  ? 'https://hcagency.tn'
+  : '*';
 
 const TOPICS_POOL = [
   {
@@ -128,12 +142,38 @@ const TOPICS_POOL = [
 ];
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Authentication: require CRON_SECRET in production
+  // ---------------------------------------------------------------------------
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const authHeader = req.headers?.authorization || '';
+    const providedToken = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : '';
+
+    if (providedToken !== cronSecret) {
+      return res.status(401).json({ error: 'Unauthorized. Valid CRON_SECRET required.' });
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Rate limit: 1 generation per 5 minutes
+  // ---------------------------------------------------------------------------
+  const now = Date.now();
+  if (now - lastGenerationTime < GENERATION_COOLDOWN_MS) {
+    return res.status(429).json({
+      error: 'Blog generation is rate limited. Please wait before trying again.',
+      retryAfterMs: GENERATION_COOLDOWN_MS - (now - lastGenerationTime)
+    });
   }
 
   try {
@@ -144,7 +184,6 @@ module.exports = async function handler(req, res) {
       try {
         const existingPosts = JSON.parse(fs.readFileSync(blogJsonPath, 'utf8'));
         if (existingPosts.length > 0 && existingPosts[0].date === formattedToday) {
-          console.log(`[HC AI] Article already exists for ${formattedToday}, skipping generation.`);
           return res.status(200).json({
             success: true,
             skipped: true,
@@ -153,9 +192,12 @@ module.exports = async function handler(req, res) {
           });
         }
       } catch (e) {
-        console.warn('[HC AI] Could not check existing posts:', e.message);
+        // Could not check existing posts, continue with generation
       }
     }
+
+    // Mark generation timestamp for rate limiting
+    lastGenerationTime = now;
 
     const apiKey = process.env.OPENAI_API_KEY || process.env.AI_API_KEY || process.env.GEMINI_API_KEY;
     const body = req.body || {};
@@ -178,7 +220,7 @@ Return ONLY valid JSON matching this exact structure:
   "readTime": "5 min read",
   "summary": "Short 2-sentence summary",
   "keyTakeaways": ["Bullet 1", "Bullet 2", "Bullet 3"],
-  "content": "<p>Content with <h2>, <p>, and <blockquote class=\\\"blog-quote\\\">...</blockquote...</p>"
+  "content": "<p>Content with <h2>, <p>, and <blockquote class=\\"blog-quote\\">...</blockquote...</p>"
 }
       `.trim();
 
@@ -226,24 +268,17 @@ Return ONLY valid JSON matching this exact structure:
                 const rawText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
                 if (rawText) {
                   generatedPost = JSON.parse(rawText);
-                  console.log(`[HC AI] Blog generated successfully with ${modelName}`);
                   geminiSuccess = true;
                   break;
                 }
-              } else {
-                console.warn(`[HC AI] Gemini ${modelName} returned status ${apiResponse.status}`);
               }
             } catch (modelErr) {
-              console.warn(`[HC AI] Gemini ${modelName} fetch error:`, modelErr.message);
+              // Model fetch error, try next model
             }
-          }
-
-          if (!geminiSuccess) {
-            console.log('[HC AI] All Gemini models failed, using fallback templates.');
           }
         }
       } catch (remoteErr) {
-        console.warn('[HC AI] Remote AI API call failed, switching to HC AI Engine fallback:', remoteErr.message);
+        // Remote AI API call failed, will use fallback templates
       }
     }
 
@@ -312,7 +347,7 @@ Return ONLY valid JSON matching this exact structure:
             if (blobRes.ok) currentPosts = await blobRes.json();
           }
         } catch (readBlobErr) {
-          console.warn('[HC AI] Could not read existing blob, starting fresh or fallback:', readBlobErr.message);
+          // Could not read existing blob, starting fresh or fallback
         }
 
         // Fallback to local posts if Blob is empty initially
@@ -326,17 +361,16 @@ Return ONLY valid JSON matching this exact structure:
         currentPosts.unshift(finalPost);
 
         // Upload updated blog.json to Vercel Blob
-        const blobResult = await put('blog.json', JSON.stringify(currentPosts, null, 2), {
+        await put('blog.json', JSON.stringify(currentPosts, null, 2), {
           access: 'public',
           addRandomSuffix: false,
           contentType: 'application/json'
         });
 
         savedStorage = 'vercel-blob';
-        console.log(`[HC AI] Article saved to Vercel Blob (${blobResult.url}): "${finalPost.title}"`);
 
       } catch (blobErr) {
-        console.error('[HC AI] Error saving to Vercel Blob:', blobErr);
+        console.error('[HC Blog Gen] Error saving to Vercel Blob.');
       }
     }
 
@@ -350,9 +384,8 @@ Return ONLY valid JSON matching this exact structure:
         }
         fs.writeFileSync(localPath, JSON.stringify(currentPosts.length > 0 ? currentPosts : [finalPost], null, 2), 'utf8');
         savedStorage = 'local-fs';
-        console.log(`[HC AI] Article saved locally to data/blog.json: "${finalPost.title}"`);
       } catch (fsErr) {
-        console.error('[HC AI] Error writing to data/blog.json:', fsErr);
+        console.error('[HC Blog Gen] Error writing to data/blog.json.');
       }
     }
 
@@ -364,7 +397,7 @@ Return ONLY valid JSON matching this exact structure:
     });
 
   } catch (err) {
-    console.error('Blog Generation Error:', err);
+    console.error('[HC Blog Gen] Generation error.');
     return res.status(500).json({ error: 'Failed to generate blog post.' });
   }
 };
