@@ -87,10 +87,10 @@ NAVIGATION LINKS & MEDIA (CRITICAL INSTRUCTION):
   • Consultation: [Book a Free Consultation](contact.html)
   • About: [About HC Agency](about.html)
 - When showcasing case studies or services, include image previews using Markdown syntax ![Alt text](image_path):
-  • August Signature: ![August Case Study](website/august/1.png)
-  • Lumière Roastery: ![Lumière Case Study](website/lumiere/1.png)
-  • Nõva Modern: ![Nõva Case Study](website/nova/1.png)
-  • Web Development: ![HC Web Design](service-photo/1.avif)
+  • August Signature: ![August Case Study](website/august/1.webp)
+  • Lumière Roastery: ![Lumière Case Study](website/lumiere/1.webp)
+  • Nõva Modern: ![Nõva Case Study](website/nova/1.webp)
+  • Web Development: ![HC Web Design](service-photo/1.webp)
 
 STRICT SOURCE OF TRUTH RULE:
 - Use ONLY the following verified HC Agency knowledge base.
