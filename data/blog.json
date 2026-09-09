@@ -1,5 +1,25 @@
 [
   {
+    "id": "post-1788904754363",
+    "title": "The Power of Micro-Interactions in Modern Luxury Web Design",
+    "slug": "hc-ai-post-1788904754363",
+    "category": "Strategy",
+    "readTime": "4 min read",
+    "date": "Sep 8, 2026",
+    "author": "HC AI",
+    "coverImage": "service-photo/1.avif",
+    "inlineImages": [
+      "service-photo/4.png"
+    ],
+    "summary": "How subtle hover states, smooth transitions, and tactile feedback elevate perceived brand value and command premium pricing.",
+    "keyTakeaways": [
+      "Micro-animations guide the user's focus effortlessly to conversion points.",
+      "High perceived design quality allows businesses to command 20-40% higher pricing.",
+      "Performance-first animations never compromise page speed."
+    ],
+    "content": "\n      <p>The difference between an ordinary template website and a bespoke digital experience lies in the details that users feel before they consciously notice them.</p>\n      <h2>1. Perceived Value & Pricing Power</h2>\n      <p>When prospective clients browse a website with buttery smooth 60fps animations, tailored typography, and refined tactile feedback, they subconsciously categorize your business as high-end.</p>\n      <h2>2. Intentional Feedback Loops</h2>\n      <p>Every interactive element should respond with intent—whether that's an illuminated button glow, an expanding navigation pill, or a seamless modal transition.</p>\n      <blockquote class=\"blog-quote\">\"Luxury is the absence of friction. Great web design communicates care, prestige, and mastery without saying a word.\"<cite>— HC AI Design Principle</cite></blockquote>\n      <h2>3. Elevate Your Brand Presence</h2>\n      <p>HC Agency crafts bespoke digital flagship websites that reflect the elegance and prestige of your real-world establishment.</p>\n    "
+  },
+  {
     "id": "post-1788808544450",
     "title": "Local SEO Playbook: How to Dominate Google Maps in 2026",
     "slug": "local-seo-playbook-google-maps-2026",
